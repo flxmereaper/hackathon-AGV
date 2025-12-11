@@ -31,19 +31,65 @@ namespace FillHackathon25
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        public static async Task GetData()
+        {
+
+            // API-Key hinzufügen
+
+            var payload = new
+            {
+                sampleDeltaTime = 100
+
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+
+
+
+            var content1 = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // GET-Request
+            var response = await httpClient.GetAsync("http://192.168.4.1/api/agv/linefollower/sensors");
+
+            string content = await response.Content.ReadAsStringAsync();
+
+            //Console.WriteLine("Status: " + response.StatusCode);
+
+            int startIndex = content.IndexOf("[") - 1;
+            string goal = content.Substring(startIndex + 1);
+            goal = goal.Replace("}", "");
+
+            int[] arr = JsonSerializer.Deserialize<int[]>(goal);
+
+            //Console.WriteLine(string.Join(", ", arr));
+
+            Motors.s1 = arr[0];
+            Motors.s2 = arr[1];
+            Motors.s3 = arr[2];
+            Motors.s4 = arr[3];
+            Motors.s5 = arr[4];
+
+            //Console.WriteLine(string.Join(", ", arr));
+
+            // Console.WriteLine($"s2: {Motors.s2}, s4: {Motors.s4}");
+
+        }
+
+
+
         //Set SampleDataTime
         public static async Task SetSample()
         {
             //Post Request
-            var payload = new 
+            var payload = new
             {
-                sampleDeltaTime = 100
+                sampleDeltaTime = 50
             };
 
             // JSON serialisieren
             string json = JsonSerializer.Serialize(payload);
 
-           
+
             // In HttpContent umwandeln
             var content1 = new StringContent(json, Encoding.UTF8);
 
@@ -51,9 +97,10 @@ namespace FillHackathon25
 
             var response1 = await httpClient.PostAsync("http://192.168.4.1/api/agv/linefollower/setSampleDeltaTime", content1);
 
+
             Console.WriteLine(response1.StatusCode);
-             
-            if(response1.IsSuccessStatusCode)
+
+            if (response1.IsSuccessStatusCode)
             {
                 Console.WriteLine("Erfolgreich");
             }
@@ -67,6 +114,7 @@ namespace FillHackathon25
             }
 
         }
+
 
 
         //LineSensor Enable
@@ -92,28 +140,7 @@ namespace FillHackathon25
             Console.WriteLine(response.StatusCode);
 
             Console.ReadLine();
-         
+
         }
-
-        
-
     }
-
-
-
-
-       
-
-
-
-
-        // read Data
-    /*public static async void ReadSensors()
-    {
-        return null;
-    }*/
-
-
-
-
 }

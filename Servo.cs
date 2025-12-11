@@ -45,11 +45,145 @@ namespace FillHackathon25
 
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/linefollower/setSampleDeltaTime", content);
+            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/pwm/enable", content);
 
             Console.WriteLine(response.StatusCode);
 
             Console.ReadLine();
         }
+
+        public static async Task SetServoChanel()
+        {
+            //Post Request
+            var payload = new
+            {
+                activeServos = 4
+            };
+
+            // JSON serialisieren
+            string json = JsonSerializer.Serialize(payload);
+
+
+            // In HttpContent umwandeln
+            var content = new StringContent(json, Encoding.UTF8);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/pwm/setActiveServos", content);
+
+            Console.WriteLine(response.StatusCode);
+
+            Console.ReadLine();
+        }
+
+
+        public static async Task SetPosition()
+        {
+            //Post Request
+            var payload = new
+            {
+                channel = 0,
+                newPosition = 50
+            };
+
+            // JSON serialisieren
+            string json = JsonSerializer.Serialize(payload);
+
+
+            // In HttpContent umwandeln
+            var content = new StringContent(json, Encoding.UTF8);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/pwm/setPosition", content);
+
+            Console.WriteLine(response.StatusCode);
+
+            Console.ReadLine();
+
+        }
+
+        public static async Task SetServoLimits()
+        {
+            //Post Request
+            var payload = new
+            {
+                channel = 0,
+                min = 0,
+                max = 170
+            };
+
+            // JSON serialisieren
+            string json = JsonSerializer.Serialize(payload);
+
+
+            // In HttpContent umwandeln
+            var content = new StringContent(json, Encoding.UTF8);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/pwm/setLimits", content);
+
+            Console.WriteLine(response.StatusCode);
+
+            Console.ReadLine();
+        }
+
+        public static async Task SetStartPosition()
+        {
+            //Post Request
+            var payload = new
+            {
+                channel = 0,
+                startPos = 90
+            };
+
+            // JSON serialisieren
+            string json = JsonSerializer.Serialize(payload);
+
+
+            // In HttpContent umwandeln
+            var content = new StringContent(json, Encoding.UTF8);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/pwm/setStartPosition", content);
+
+            Console.WriteLine(response.StatusCode);
+
+            Console.ReadLine();
+        }
+
+        public static async Task SetSweepTime()
+        {
+            //Post Request
+            var payload = new
+            {
+                channel = 0,
+                fullSweepTime_ms = 1000
+            };
+
+            // JSON serialisieren
+            string json = JsonSerializer.Serialize(payload);
+
+
+            // In HttpContent umwandeln
+            var content = new StringContent(json, Encoding.UTF8);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await httpClient.PostAsync("http://192.168.4.1/api/agv/pwm/setFullSweepTime", content);
+
+            Console.WriteLine(response.StatusCode);
+
+            Console.ReadLine();
+        }
+
+
+
+            
+
+
+
     }
 }
