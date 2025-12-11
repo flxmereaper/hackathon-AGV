@@ -138,7 +138,7 @@ namespace FillHackathon25
 
             string content = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine("Repsponse: " + content);
+            Console.WriteLine("Response: " + content);
 
 
         }

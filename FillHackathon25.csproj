@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackendRequest.cs" />
     <Compile Include="LineFollower.cs" />
     <Compile Include="Motors.cs" />
     <Compile Include="Program.cs" />
