@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -20,15 +18,16 @@ namespace FillHackathon25
     internal class BackendRequest
     {
         private static readonly HttpClient Client = new HttpClient();
-        private static readonly string baseUrl = "http://10.230.16.45:3000"; //Bei neuem Verbinden ändern!
+        private static readonly string BaseUrl = "http://10.230.16.45:3000"; //Bei neuem Verbinden ändern!
+        private static int _locationCount = 0;
         public static async Task<Dictionary<int, bool>> IsEnabled()
         {
             var dict = new Dictionary<int, bool>();
-            var response = await Client.GetAsync($"{baseUrl}/enabled");
+            var response = await Client.GetAsync($"{BaseUrl}/enabled");
             string content = await response.Content.ReadAsStringAsync();
             if(content.Equals("true"))
             {
-                var stationResponse = await Client.GetAsync($"{baseUrl}/orders");
+                var stationResponse = await Client.GetAsync($"{BaseUrl}/orders");
                 string stationContent = await stationResponse.Content.ReadAsStringAsync();
                 foreach (JsonObject item in JsonObject.Parse(stationContent) as JsonArray)
                 {
@@ -40,7 +39,7 @@ namespace FillHackathon25
             return null;
         }
 
-        public static async Task StationDocked(int stationId)
+        public static async Task StationDocked()
         {
             var payload = new
             {
@@ -53,12 +52,12 @@ namespace FillHackathon25
             payloadContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
 
-            var response = await Client.PutAsync($"{baseUrl}/locations/{stationId}", payloadContent);
+            var response = await Client.PutAsync($"{BaseUrl}/locations/{_locationCount}", payloadContent);
 
             Console.WriteLine(response.StatusCode);
         }
 
-        public static async Task StationDone(int stationId)
+        public static async Task StationDone()
         {
             var payload = new
             {
@@ -71,9 +70,10 @@ namespace FillHackathon25
             payloadContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
 
-            var response = await Client.PutAsync($"{baseUrl}/locations/{stationId}", payloadContent);
+            var response = await Client.PutAsync($"{BaseUrl}/locations/{_locationCount}", payloadContent);
 
             Console.WriteLine(response.StatusCode);
+            _locationCount++;
         }
     }
 }
